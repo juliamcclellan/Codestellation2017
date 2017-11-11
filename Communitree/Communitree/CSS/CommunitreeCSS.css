@@ -1,6 +1,18 @@
 ﻿body {
 }
 
+<<<<<<< HEAD
 .learn-more{
 	color:red;
 }
+=======
+.wrapper .navbar{
+    border-bottom-color:green;
+}
+
+.wrapper .navbar .navbar-header .navbar-left img{
+    max-height:30px;
+    margin:10px 30px 10px 30px;
+}
+
+>>>>>>> 017a57d6e39504aacc7c82dcdf0bad472cb663be
