@@ -1,2 +1,12 @@
 ﻿body {
 }
+
+.wrapper .navbar{
+    border-bottom-color:green;
+}
+
+.wrapper .navbar .navbar-header .navbar-left img{
+    max-height:30px;
+    margin:10px 30px 10px 30px;
+}
+
