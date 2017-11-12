@@ -6,19 +6,27 @@ public class MultipleType extends AssignmentType
 {
 	private ArrayList<Assignment> assignments;
 	
-	public MultipleType(double percent)
+	public MultipleType(String name, double percent)
 	{
-		super(percent);
+		super(name, percent);
 		assignments = new ArrayList<Assignment>();
 	}
 	
-	public MultipleType(double percent, ArrayList<Assignment> assignments)
+	public MultipleType(String name, double percent, ArrayList<Assignment> assignments)
 	{
-		super(percent);
+		super(name, percent);
 		this.assignments = assignments;
 	}
 	
-	public void addAssignment()
+	public void addAssignment(Assignment a)
+	{
+		assignments.add(a);
+	}
+	
+	public ArrayList<Assignment> getAssignments()
+	{
+		return assignments;
+	}
 	
 	@Override
 	public double getCurrentAverage()
@@ -65,6 +73,4 @@ public class MultipleType extends AssignmentType
 			return Integer.MIN_VALUE;
 		}
 	}
-	
-	public 
 }

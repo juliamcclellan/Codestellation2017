@@ -2,25 +2,40 @@ package grades;
 
 public class SingleType extends AssignmentType
 {
-	private double score;
-	private boolean taken;
+	private Assignment a;
 	
-	public SingleType(double percent)
+	public SingleType(String name, double percent)
 	{
-		super(percent);
+		super(name, percent);
 	}
-
+	
+	public SingleType(String name, double percent, Assignment a)
+	{
+		super(name, percent);
+		this.a = a;
+	}
+	
+	public void setAssignment(Assignment a)
+	{
+		this.a = a;
+	}
+	
+	public Assignment getAssignment()
+	{
+		return a;
+	}
+	
 	@Override
 	public double getCurrentAverage()
 	{
-		if(taken) return score;
+		if(a.getTaken()) return a.getScore();
 		else return Integer.MIN_VALUE;
 	}
 
 	@Override
 	public double getExpectedAverage()
 	{
-		if(taken) return Integer.MIN_VALUE;
-		else return score;
+		if(a.getTaken()) return Integer.MIN_VALUE;
+		else return a.getScore();
 	}
 }

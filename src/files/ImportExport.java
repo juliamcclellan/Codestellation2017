@@ -10,7 +10,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import grades.Assignment;
+import grades.AssignmentType;
 import grades.ClassData;
+import grades.MultipleType;
+import grades.SingleType;
 
 
 public class ImportExport
@@ -18,6 +22,8 @@ public class ImportExport
 	private static final String EXTENSION = ".grade";
 	private static final String DIRECTORY = "data/";
 	private static final String CLASS_FILE = "classNames";
+	private static final String MAIN_FILE = "info";
+	private static final String TAKEN = "T", NOT_TAKEN = "N";
 	
 	public static ArrayList<ClassData> importData()
 	{
@@ -45,9 +51,9 @@ public class ImportExport
 		return classes;
 	}
 	
-	public static ClassData importClass(String name)
+	private static ClassData importClass(String name)
 	{
-		File classFile = new File(DIRECTORY + name + EXTENSION);
+		File classFile = new File(DIRECTORY + name + "/" + MAIN_FILE + EXTENSION);
 		Scanner scan;
 		try
 		{
@@ -57,6 +63,69 @@ public class ImportExport
 		{
 			e.printStackTrace();
 			return null;
+		}
+		
+		ArrayList<AssignmentType> assignments = new ArrayList<AssignmentType>();
+		while(scan.hasNextLine())
+		{
+			String type = scan.nextLine();
+			assignments.add(importAssignment(name, type));
+		}
+		scan.close();
+		return new ClassData(name, assignments);
+	}
+	
+	private static AssignmentType importAssignment(String className, String assignmentName)
+	{
+		File assignmentFile = new File(DIRECTORY + className + "/" + assignmentName + EXTENSION);
+		Scanner scan;
+		try
+		{
+			scan = new Scanner(assignmentFile);
+		}
+		catch(FileNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+		int type = scan.nextInt();
+		String name = scan.nextLine();
+		double percent = scan.nextDouble();
+		
+		AssignmentType result;
+		if(type == 1)
+		{
+			Assignment a = getAssignment(scan);
+			result = new SingleType(name, percent, a);
+		}
+		else
+		{
+			ArrayList<Assignment> a = new ArrayList<Assignment>();
+			while(scan.hasNext())
+			{
+				a.add(getAssignment(scan));
+			}
+			result = new MultipleType(name, percent, a);
+		}
+		
+		scan.close();
+		return result;
+	}
+	
+	private static Assignment getAssignment(Scanner scan)
+	{
+		String name = scan.nextLine();
+		double score = scan.nextDouble();
+		String taken = scan.nextLine();
+		
+		if(taken.equals(TAKEN))
+		{
+			return new Assignment(name, score, true);
+		}
+		else
+		{
+			return new Assignment(name, score, false);
 		}
 	}
 }
