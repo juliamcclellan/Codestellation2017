@@ -28,6 +28,7 @@ public class SingleType extends AssignmentType
 	@Override
 	public double getCurrentAverage()
 	{
+		if(a == null) return Integer.MIN_VALUE;
 		if(a.getTaken()) return a.getScore();
 		else return Integer.MIN_VALUE;
 	}
@@ -35,6 +36,7 @@ public class SingleType extends AssignmentType
 	@Override
 	public double getExpectedAverage()
 	{
+		if(a == null) return Integer.MIN_VALUE;
 		if(a.getTaken()) return Integer.MIN_VALUE;
 		else return a.getScore();
 	}
