@@ -40,4 +40,9 @@ public class SingleType extends AssignmentType
 		if(a.getTaken()) return Integer.MIN_VALUE;
 		else return a.getScore();
 	}
+	
+	public String toString()
+	{
+		return super.toString() + " => [" + a + "]";
+	}
 }

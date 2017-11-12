@@ -35,6 +35,11 @@ public abstract class AssignmentType
 		this.percent = percent;
 	}
 	
+	public String toString()
+	{
+		return "Type: " + name + ", weight: " + percent;
+	}
+	
 	public abstract double getCurrentAverage();
 	
 	public abstract double getExpectedAverage();  

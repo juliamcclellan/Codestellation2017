@@ -72,4 +72,9 @@ public class Assignment
 		this.score = score;
 		taken = true;
 	}
+	
+	public String toString()
+	{
+		return "Assignment: " + name + ", score: " + score + " " + (taken ? "T" : "NT");
+	}
 }

@@ -93,15 +93,14 @@ public class ImportExport
 			return null;
 		}
 		
-		int type = scan.nextInt();
-		String name = scan.nextLine();
 		double percent = scan.nextDouble();
+		int type = scan.nextInt();
 		
 		AssignmentType result;
 		if(type == 1)
 		{
 			Assignment a = getAssignment(scan);
-			result = new SingleType(name, percent, a);
+			result = new SingleType(assignmentName, percent, a);
 		}
 		else
 		{
@@ -110,7 +109,7 @@ public class ImportExport
 			{
 				a.add(getAssignment(scan));
 			}
-			result = new MultipleType(name, percent, a);
+			result = new MultipleType(assignmentName, percent, a);
 		}
 		
 		scan.close();
@@ -119,9 +118,9 @@ public class ImportExport
 	
 	private static Assignment getAssignment(Scanner scan)
 	{
-		String name = scan.nextLine();
+		String name = scan.next();
 		double score = scan.nextDouble();
-		String taken = scan.nextLine();
+		String taken = scan.next();
 		
 		if(taken.equals(TAKEN))
 		{
@@ -207,6 +206,7 @@ public class ImportExport
 		}
 		catch(FileNotFoundException e){}
 		
+		output.println(a.getPercent());
 		if(a instanceof SingleType)
 		{
 			output.println("1");
@@ -214,9 +214,9 @@ public class ImportExport
 		}
 		else if(a instanceof MultipleType)
 		{
+			output.println("2");
 			for(Assignment assignment: ((MultipleType) a).getAssignments())
 			{
-				output.println("2");
 				printAssignment(assignment, output);
 			}
 		}
@@ -231,7 +231,7 @@ public class ImportExport
 		else output.println(NOT_TAKEN);
 	}
 	
-	public static void main(String[] args)
+/*	public static void main(String[] args)
 	{
 		Assignment a1 = new Assignment("hw1", 90), a2 = new Assignment("hw2", 80, false), e = new Assignment("final", 85);
 		SingleType exam = new SingleType("Final", 50, e);
@@ -246,5 +246,7 @@ public class ImportExport
 		ArrayList<ClassData> clist = new ArrayList<ClassData>();
 		clist.add(c);
 		export(clist);
-	}
+		ArrayList<ClassData> clist = importData();
+		System.out.println(clist);
+	}*/
 }

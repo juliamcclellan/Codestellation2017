@@ -70,4 +70,9 @@ public class MultipleType extends AssignmentType
 			return Integer.MIN_VALUE;
 		}
 	}
+	
+	public String toString()
+	{
+		return super.toString() + " => " + assignments;
+	}
 }

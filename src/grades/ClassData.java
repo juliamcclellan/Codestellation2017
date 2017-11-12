@@ -74,4 +74,9 @@ public class ClassData
 		if(outOf == 0) return Integer.MIN_VALUE;
 		else return total / outOf;
 	}
+	
+	public String toString()
+	{
+		return "Class: " + name + "\n   " + assignments;
+	}
 }
