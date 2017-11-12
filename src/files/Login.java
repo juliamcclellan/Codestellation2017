@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-//import org.mindrot.jbcrypt.BCrypt;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -41,7 +41,7 @@ public class Login
 		String pw = scan.nextLine();
 		scan.close();
 		
-		if(pw.equals(password)) return ImportExport.importData(username); //TODO encryption
+		if(BCrypt.checkpw(password, pw)) return ImportExport.importData(username);
 		else return null;
 	}
 	
@@ -63,20 +63,9 @@ public class Login
 		try
 		{
 			output = new PrintWriter(pw);
-		} catch (FileNotFoundException e){}
-		output.print(password); //TODO encryption
+		} catch (FileNotFoundException e){} 
+		output.print(BCrypt.hashpw(password, BCrypt.gensalt()));
 		output.close();
 		return true;
-		
-		//BCrypt.hashpw(password, BCrypt.gensalt());
-		/*StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
-		String encryptedPassword = passwordEncryptor.encryptPassword(userPassword);
-		...
-		if (passwordEncryptor.checkPassword(inputPassword, encryptedPassword)) {
-		  // correct!
-		} else {
-		  // bad login!
-		}
-		...encr*/
 	}
 }
