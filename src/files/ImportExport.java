@@ -201,12 +201,14 @@ public class ImportExport
 		
 		if(a instanceof SingleType)
 		{
+			output.println("1");
 			printAssignment(((SingleType) a).getAssignment(), output);
 		}
 		else if(a instanceof MultipleType)
 		{
 			for(Assignment assignment: ((MultipleType) a).getAssignments())
 			{
+				output.println("2");
 				printAssignment(assignment, output);
 			}
 		}
