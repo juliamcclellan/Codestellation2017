@@ -42,4 +42,36 @@ public class ClassData
 	{
 		this.assignments = assignments;
 	}
+	
+	public double getCurrentGrade()
+	{
+		double total = 0, outOf = 0;
+		for(AssignmentType a: assignments)
+		{
+			double avg = a.getCurrentAverage();
+			if(avg != Integer.MIN_VALUE)
+			{
+				total += avg * a.getPercent();
+				outOf += a.getPercent();
+			}
+		}
+		if(outOf == 0) return Integer.MIN_VALUE;
+		else return total / outOf;
+	}
+	
+	public double getExpectedGrade()
+	{
+		double total = 0, outOf = 0;
+		for(AssignmentType a: assignments)
+		{
+			double avg = a.getExpectedAverage();
+			if(avg != Integer.MIN_VALUE)
+			{
+				total += avg * a.getPercent();
+				outOf += a.getPercent();
+			}
+		}
+		if(outOf == 0) return Integer.MIN_VALUE;
+		else return total / outOf;
+	}
 }
