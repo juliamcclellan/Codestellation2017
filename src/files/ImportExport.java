@@ -135,18 +135,25 @@ public class ImportExport
 	
 	public static void export(ArrayList<ClassData> classes)
 	{
+		Path p = Paths.get(DIRECTORY);
+		try
+		{
+			Files.createDirectory(p);
+		}
+		catch(IOException e){}
+		
 		File classFile = new File(DIRECTORY + CLASS_FILE + EXTENSION);
 		try
 		{
 			classFile.createNewFile();
-		} catch (IOException e){}
+		} catch (IOException e){e.printStackTrace();}
 		
 		PrintWriter output = null;
 		try
 		{
 			output = new PrintWriter(classFile);
 		}
-		catch(FileNotFoundException e){}
+		catch(FileNotFoundException e){e.printStackTrace();}
 		
 		for(ClassData data: classes)
 		{
@@ -183,6 +190,7 @@ public class ImportExport
 			output.println(a.getName());
 			exportAssignment(a, data.getName());
 		}
+		output.close();
 	}
 	
 	private static void exportAssignment(AssignmentType a, String className)
@@ -212,6 +220,7 @@ public class ImportExport
 				printAssignment(assignment, output);
 			}
 		}
+		output.close();
 	}
 	
 	private static void printAssignment(Assignment a, PrintWriter output)
@@ -220,5 +229,22 @@ public class ImportExport
 		output.println(a.getScore());
 		if(a.getTaken()) output.println(TAKEN);
 		else output.println(NOT_TAKEN);
+	}
+	
+	public static void main(String[] args)
+	{
+		Assignment a1 = new Assignment("hw1", 90), a2 = new Assignment("hw2", 80, false), e = new Assignment("final", 85);
+		SingleType exam = new SingleType("Final", 50, e);
+		ArrayList<Assignment> alist = new ArrayList<Assignment>();
+		alist.add(a1);
+		alist.add(a2);
+		MultipleType hw = new MultipleType("Homework", 50, alist);
+		ArrayList<AssignmentType> list = new ArrayList<AssignmentType>();
+		list.add(hw);
+		list.add(exam);
+		ClassData c = new ClassData("CS", list);
+		ArrayList<ClassData> clist = new ArrayList<ClassData>();
+		clist.add(c);
+		export(clist);
 	}
 }
