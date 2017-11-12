@@ -6,7 +6,11 @@ package files;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -127,5 +131,92 @@ public class ImportExport
 		{
 			return new Assignment(name, score, false);
 		}
+	}
+	
+	public static void export(ArrayList<ClassData> classes)
+	{
+		File classFile = new File(DIRECTORY + CLASS_FILE + EXTENSION);
+		try
+		{
+			classFile.createNewFile();
+		} catch (IOException e){}
+		
+		PrintWriter output = null;
+		try
+		{
+			output = new PrintWriter(classFile);
+		}
+		catch(FileNotFoundException e){}
+		
+		for(ClassData data: classes)
+		{
+			output.println(data.getName());
+			exportClass(data);
+		}
+		
+		output.close();
+	}
+	
+	private static void exportClass(ClassData data)
+	{
+		Path p = Paths.get(DIRECTORY + data.getName());
+		try
+		{
+			Files.createDirectory(p);
+		}
+		catch(IOException e1){} //thrown if the directory already exists
+		
+		File infoFile = new File(DIRECTORY + data.getName() + "/" + MAIN_FILE + EXTENSION);
+		try
+		{
+			infoFile.createNewFile();
+		} catch (IOException e){}
+		PrintWriter output = null;
+		try
+		{
+			output = new PrintWriter(infoFile);
+		}
+		catch(FileNotFoundException e){}
+		
+		for(AssignmentType a: data.getAssignments())
+		{
+			output.println(a.getName());
+			exportAssignment(a, data.getName());
+		}
+	}
+	
+	private static void exportAssignment(AssignmentType a, String className)
+	{
+		File file = new File(DIRECTORY + className + "/" + a.getName() + EXTENSION);
+		try
+		{
+			file.createNewFile();
+		} catch (IOException e){}
+		PrintWriter output = null;
+		try
+		{
+			output = new PrintWriter(file);
+		}
+		catch(FileNotFoundException e){}
+		
+		if(a instanceof SingleType)
+		{
+			printAssignment(((SingleType) a).getAssignment(), output);
+		}
+		else if(a instanceof MultipleType)
+		{
+			for(Assignment assignment: ((MultipleType) a).getAssignments())
+			{
+				printAssignment(assignment, output);
+			}
+		}
+	}
+	
+	private static void printAssignment(Assignment a, PrintWriter output)
+	{
+		output.println(a.getName());
+		output.println(a.getScore());
+		if(a.getTaken()) output.println(TAKEN);
+		else output.println(NOT_TAKEN);
 	}
 }
