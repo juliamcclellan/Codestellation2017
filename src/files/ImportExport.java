@@ -23,15 +23,15 @@ import grades.SingleType;
 
 public class ImportExport
 {
-	private static final String EXTENSION = ".grade";
-	private static final String DIRECTORY = "data/";
+	static final String EXTENSION = ".grade";
+	static final String DIRECTORY = "data/";
 	private static final String CLASS_FILE = "classNames";
 	private static final String MAIN_FILE = "info";
 	private static final String TAKEN = "T", NOT_TAKEN = "N";
 	
-	public static ArrayList<ClassData> importData()
+	static ArrayList<ClassData> importData(String user)
 	{
-		File classesFile = new File(DIRECTORY + CLASS_FILE + EXTENSION);
+		File classesFile = new File(DIRECTORY + user + "/" + CLASS_FILE + EXTENSION);
 		Scanner scan;
 		try
 		{
@@ -47,7 +47,7 @@ public class ImportExport
 		while(scan.hasNextLine())
 		{
 			String className = scan.nextLine();
-			ClassData newClass = importClass(className);
+			ClassData newClass = importClass(className, user);
 			classes.add(newClass);
 		}
 		
@@ -55,9 +55,9 @@ public class ImportExport
 		return classes;
 	}
 	
-	private static ClassData importClass(String name)
+	private static ClassData importClass(String name, String user)
 	{
-		File classFile = new File(DIRECTORY + name + "/" + MAIN_FILE + EXTENSION);
+		File classFile = new File(DIRECTORY + user + "/" + name + "/" + MAIN_FILE + EXTENSION);
 		Scanner scan;
 		try
 		{
@@ -73,15 +73,15 @@ public class ImportExport
 		while(scan.hasNextLine())
 		{
 			String type = scan.nextLine();
-			assignments.add(importAssignment(name, type));
+			assignments.add(importAssignment(name, type, user));
 		}
 		scan.close();
 		return new ClassData(name, assignments);
 	}
 	
-	private static AssignmentType importAssignment(String className, String assignmentName)
+	private static AssignmentType importAssignment(String className, String assignmentName, String user)
 	{
-		File assignmentFile = new File(DIRECTORY + className + "/" + assignmentName + EXTENSION);
+		File assignmentFile = new File(DIRECTORY + user + "/" + className + "/" + assignmentName + EXTENSION);
 		Scanner scan;
 		try
 		{
@@ -132,16 +132,18 @@ public class ImportExport
 		}
 	}
 	
-	public static void export(ArrayList<ClassData> classes)
+	public static void export(ArrayList<ClassData> classes, String user)
 	{
-		Path p = Paths.get(DIRECTORY);
+		/*Path p1 = Paths.get(DIRECTORY);
+		Path p2 = Paths.get(DIRECTORY + user + "/");
 		try
 		{
-			Files.createDirectory(p);
+			Files.createDirectory(p1);
+			Files.createDirectory(p2);
 		}
-		catch(IOException e){}
+		catch(IOException e){e.printStackTrace();}*/
 		
-		File classFile = new File(DIRECTORY + CLASS_FILE + EXTENSION);
+		File classFile = new File(DIRECTORY + user + "/" + CLASS_FILE + EXTENSION);
 		try
 		{
 			classFile.createNewFile();
@@ -157,22 +159,22 @@ public class ImportExport
 		for(ClassData data: classes)
 		{
 			output.println(data.getName());
-			exportClass(data);
+			exportClass(data, user);
 		}
 		
 		output.close();
 	}
 	
-	private static void exportClass(ClassData data)
+	private static void exportClass(ClassData data, String user)
 	{
-		Path p = Paths.get(DIRECTORY + data.getName());
+		Path p = Paths.get(DIRECTORY + user + "/" + data.getName());
 		try
 		{
 			Files.createDirectory(p);
 		}
 		catch(IOException e1){} //thrown if the directory already exists
 		
-		File infoFile = new File(DIRECTORY + data.getName() + "/" + MAIN_FILE + EXTENSION);
+		File infoFile = new File(DIRECTORY + user + "/" + data.getName() + "/" + MAIN_FILE + EXTENSION);
 		try
 		{
 			infoFile.createNewFile();
@@ -187,14 +189,14 @@ public class ImportExport
 		for(AssignmentType a: data.getAssignments())
 		{
 			output.println(a.getName());
-			exportAssignment(a, data.getName());
+			exportAssignment(a, data.getName(), user);
 		}
 		output.close();
 	}
 	
-	private static void exportAssignment(AssignmentType a, String className)
+	private static void exportAssignment(AssignmentType a, String className, String user)
 	{
-		File file = new File(DIRECTORY + className + "/" + a.getName() + EXTENSION);
+		File file = new File(DIRECTORY + user + "/" + className + "/" + a.getName() + EXTENSION);
 		try
 		{
 			file.createNewFile();
@@ -231,8 +233,9 @@ public class ImportExport
 		else output.println(NOT_TAKEN);
 	}
 	
-/*	public static void main(String[] args)
+	public static void main(String[] args)
 	{
+		Login.newUser("julia", "password");
 		Assignment a1 = new Assignment("hw1", 90), a2 = new Assignment("hw2", 80, false), e = new Assignment("final", 85);
 		SingleType exam = new SingleType("Final", 50, e);
 		ArrayList<Assignment> alist = new ArrayList<Assignment>();
@@ -245,8 +248,9 @@ public class ImportExport
 		ClassData c = new ClassData("CS", list);
 		ArrayList<ClassData> clist = new ArrayList<ClassData>();
 		clist.add(c);
-		export(clist);
-		ArrayList<ClassData> clist = importData();
+		export(clist, "julia");
+		
+		clist = Login.login("julia", "password");
 		System.out.println(clist);
-	}*/
+	}
 }

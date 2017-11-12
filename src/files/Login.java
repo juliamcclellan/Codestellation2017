@@ -1,13 +1,21 @@
 package files;
 
-import org.mindrot.jbcrypt.BCrypt;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+//import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import grades.ClassData;
 
 public class Login
 {
+	private static final String PASSWORD = "pw";
+	
 	/**
 	 * Attempts to log in a user
 	 * @param username The user's entered username
@@ -18,11 +26,57 @@ public class Login
 	 */
 	public static ArrayList<ClassData> login(String username, String password)
 	{
-		return ImportExport.importData(); // to be implemented later
+		File f = new File(ImportExport.DIRECTORY + username);
+		if(!f.exists()) return null;
+		
+		File pwFile = new File(ImportExport.DIRECTORY + username + "/" + PASSWORD + ImportExport.EXTENSION);
+		Scanner scan;
+		try
+		{
+			scan = new Scanner(pwFile);
+		} catch (FileNotFoundException e)
+		{
+			return null;
+		}
+		String pw = scan.nextLine();
+		scan.close();
+		
+		if(pw.equals(password)) return ImportExport.importData(username); //TODO encryption
+		else return null;
 	}
 	
 	public static boolean newUser(String username, String password)
 	{
-		BCrypt.hashpw(password, BCrypt.gensalt();
+		File root = new File(ImportExport.DIRECTORY);
+		if(!root.exists()) root.mkdir();
+		
+		File dir = new File(ImportExport.DIRECTORY + username);
+		if(dir.exists()) return false;
+		else dir.mkdir();
+		File pw = new File(ImportExport.DIRECTORY + username + "/" + PASSWORD + ImportExport.EXTENSION);
+		try
+		{
+			pw.createNewFile();
+		} catch (IOException e1) {}
+		
+		PrintWriter output = null;
+		try
+		{
+			output = new PrintWriter(pw);
+		} catch (FileNotFoundException e){}
+		output.print(password); //TODO encryption
+		output.close();
+		return true;
+		
+		//BCrypt.hashpw(password, BCrypt.gensalt());
+		/*StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+		String encryptedPassword = passwordEncryptor.encryptPassword(userPassword);
+		...
+		if (passwordEncryptor.checkPassword(inputPassword, encryptedPassword)) {
+		  // correct!
+		} else {
+		  // bad login!
+		}
+		...encr*/
 	}
 }
