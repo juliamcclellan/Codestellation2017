@@ -58,11 +58,8 @@ public class MultipleType extends AssignmentType
 		int number = 0;
 		for(Assignment a: assignments)
 		{
-			if(!a.getTaken())
-			{
-				total += a.getScore();
-				number++;
-			}
+			total += a.getScore();
+			number++;
 		}
 		if(number != 0)
 		{
