@@ -17,7 +17,8 @@ public class PaneOrganizer {
 	
 	public PaneOrganizer() {
 		_pane = new Pane();
-		this.setUpMenu();
+		//this.setUpMenu();
+		//_pane.getChildren().addAll(pane.getPane());
 	}
 	
 	public Pane getRoot() {
